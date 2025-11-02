@@ -78,30 +78,30 @@
  | <a href="#C"><strong>C</strong></a>
  | <a href="#D"><strong>D</strong></a>
  | <a href="#E"><strong>E</strong></a>
+ | <a href="#F"><strong>F</strong></a>
  | <a href="#G"><strong>G</strong></a>
  | <a href="#H"><strong>H</strong></a>
  | <a href="#I"><strong>I</strong></a>
  | <a href="#L"><strong>L</strong></a>
  | <a href="#M"><strong>M</strong></a>
  | <a href="#N"><strong>N</strong></a>
- | <a href="#O"><strong>O</strong></a>
  | <a href="#P"><strong>P</strong></a>
  | <a href="#Q"><strong>Q</strong></a>
  | <a href="#R"><strong>R</strong></a>
  | <a href="#S"><strong>S</strong></a>
  | <a href="#T"><strong>T</strong></a>
- | <a href="#U"><strong>U</strong></a>
  | <a href="#V"><strong>V</strong></a>
+ | <a href="#W"><strong>W</strong></a>
  
 </div>
 <h2 id="A">A</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/experiment.html#PTLF.experiment.archive_ppl">archive_ppl() (in module PTLF.experiment)</a>
+      <li><a href="api/experiment.html#lwf.experiment.archive_ppl">archive_ppl() (in module lwf.experiment)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/utils.html#PTLF.utils.Component.args">args (Component attribute)</a>
+      <li><a href="api/utils.html#lwf.utils.Component.args">args (Component attribute)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -109,15 +109,21 @@
 <h2 id="C">C</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/utils.html#PTLF.utils.Component.check_args">check_args() (Component method)</a>
+      <li><a href="api/utils.html#lwf.utils.Component.check_args">check_args() (Component method)</a>
 </li>
-      <li><a href="api/utils.html#PTLF.utils.Db.close">close() (Db method)</a>
+      <li><a href="api/experiment.html#lwf.experiment.PipeLine.clean">clean() (PipeLine method)</a>
+
+      <ul>
+        <li><a href="api/utils.html#lwf.utils.WorkFlow.clean">(WorkFlow method)</a>
 </li>
+      </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/utils.html#PTLF.utils.Component">Component (class in PTLF.utils)</a>
+      <li><a href="api/utils.html#lwf.utils.Db.close">close() (Db method)</a>
 </li>
-      <li><a href="api/lab.html#PTLF.lab.create_project">create_project() (in module PTLF.lab)</a>
+      <li><a href="api/utils.html#lwf.utils.Component">Component (class in lwf.utils)</a>
+</li>
+      <li><a href="api/lab.html#lwf.lab.create_project">create_project() (in module lwf.lab)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -125,13 +131,11 @@
 <h2 id="D">D</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/utils.html#PTLF.utils.DataSet">DataSet (class in PTLF.utils)</a>
+      <li><a href="api/utils.html#lwf.utils.Db">Db (class in lwf.utils)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/utils.html#PTLF.utils.Db">Db (class in PTLF.utils)</a>
-</li>
-      <li><a href="api/experiment.html#PTLF.experiment.delete_ppl">delete_ppl() (in module PTLF.experiment)</a>
+      <li><a href="api/experiment.html#lwf.experiment.delete_ppl">delete_ppl() (in module lwf.experiment)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -139,11 +143,23 @@
 <h2 id="E">E</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/utils.html#PTLF.utils.Db.execute">execute() (Db method)</a>
+      <li><a href="api/utils.html#lwf.utils.Db.execute">execute() (Db method)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/utils.html#PTLF.utils.extract_all_locs">extract_all_locs() (in module PTLF.utils)</a>
+      <li><a href="api/utils.html#lwf.utils.extract_all_locs">extract_all_locs() (in module lwf.utils)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="F">F</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/utils.html#lwf.utils.filter_configs">filter_configs() (in module lwf.utils)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/experiment.html#lwf.experiment.filter_ppls">filter_ppls() (in module lwf.experiment)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -151,27 +167,31 @@
 <h2 id="G">G</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/context.html#PTLF.context.get_caller">get_caller() (in module PTLF.context)</a>
+      <li><a href="api/context.html#lwf.context.get_caller">get_caller() (in module lwf.context)</a>
 </li>
-      <li><a href="api/experiment.html#PTLF.experiment.get_histories">get_histories() (in module PTLF.experiment)</a>
+      <li><a href="api/utils.html#lwf.utils.get_invalid_loc_queries">get_invalid_loc_queries() (in module lwf.utils)</a>
 </li>
-      <li><a href="api/utils.html#PTLF.utils.get_invalid_loc_queries">get_invalid_loc_queries() (in module PTLF.utils)</a>
+      <li><a href="api/lab.html#lwf.lab.get_logs">get_logs() (in module lwf.lab)</a>
 </li>
-      <li><a href="api/lab.html#PTLF.lab.get_logs">get_logs() (in module PTLF.lab)</a>
+      <li><a href="api/utils.html#lwf.utils.get_matching">get_matching() (in module lwf.utils)</a>
 </li>
-      <li><a href="api/experiment.html#PTLF.experiment.PipeLine.get_path">get_path() (PipeLine method)</a>
+      <li><a href="api/experiment.html#lwf.experiment.PipeLine.get_path">get_path() (PipeLine method)</a>
+
+      <ul>
+        <li><a href="api/utils.html#lwf.utils.WorkFlow.get_path">(WorkFlow method)</a>
 </li>
+      </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/experiment.html#PTLF.experiment.get_ppl_details">get_ppl_details() (in module PTLF.experiment)</a>
+      <li><a href="api/experiment.html#lwf.experiment.get_ppl_details">get_ppl_details() (in module lwf.experiment)</a>
 </li>
-      <li><a href="api/experiment.html#PTLF.experiment.get_ppl_status">get_ppl_status() (in module PTLF.experiment)</a>
+      <li><a href="api/experiment.html#lwf.experiment.get_ppl_status">get_ppl_status() (in module lwf.experiment)</a>
 </li>
-      <li><a href="api/experiment.html#PTLF.experiment.get_ppls">get_ppls() (in module PTLF.experiment)</a>
+      <li><a href="api/experiment.html#lwf.experiment.get_ppls">get_ppls() (in module lwf.experiment)</a>
 </li>
-      <li><a href="api/context.html#PTLF.context.get_shared_data">get_shared_data() (in module PTLF.context)</a>
+      <li><a href="api/context.html#lwf.context.get_shared_data">get_shared_data() (in module lwf.context)</a>
 </li>
-      <li><a href="api/experiment.html#PTLF.experiment.group_by_common_columns">group_by_common_columns() (in module PTLF.experiment)</a>
+      <li><a href="api/experiment.html#lwf.experiment.group_by_common_columns">group_by_common_columns() (in module lwf.experiment)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -179,7 +199,7 @@
 <h2 id="H">H</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/utils.html#PTLF.utils.hash_args">hash_args() (in module PTLF.utils)</a>
+      <li><a href="api/utils.html#lwf.utils.hash_args">hash_args() (in module lwf.utils)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -187,7 +207,7 @@
 <h2 id="I">I</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/experiment.html#PTLF.experiment.PipeLine.is_running">is_running() (PipeLine method)</a>
+      <li><a href="api/experiment.html#lwf.experiment.PipeLine.is_running">is_running() (PipeLine method)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -195,105 +215,97 @@
 <h2 id="L">L</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/lab.html#PTLF.lab.lab_setup">lab_setup() (in module PTLF.lab)</a>
+      <li><a href="api/lab.html#lwf.lab.lab_setup">lab_setup() (in module lwf.lab)</a>
 </li>
-      <li><a href="api/experiment.html#PTLF.experiment.PipeLine.load">load() (PipeLine method)</a>
+      <li><a href="api/experiment.html#lwf.experiment.PipeLine.load">load() (PipeLine method)</a>
 </li>
-      <li><a href="api/utils.html#PTLF.utils.load_component">load_component() (in module PTLF.utils)</a>
+      <li><a href="api/utils.html#lwf.utils.Component.load_component">load_component() (Component method)</a>
+
+      <ul>
+        <li><a href="api/utils.html#lwf.utils.load_component">(in module lwf.utils)</a>
 </li>
+        <li><a href="api/experiment.html#lwf.experiment.PipeLine.load_component">(PipeLine method)</a>
+</li>
+      </ul></li>
+      <li><a href="api/utils.html#lwf.utils.Component.loc">loc (Component attribute)</a>
+</li>
+      <li>
+    lwf.context
+
+      <ul>
+        <li><a href="api/context.html#module-lwf.context">module</a>
+</li>
+      </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/experiment.html#PTLF.experiment.PipeLine.load_model">load_model() (PipeLine method)</a>
+      <li>
+    lwf.experiment
+
+      <ul>
+        <li><a href="api/experiment.html#module-lwf.experiment">module</a>
 </li>
-      <li><a href="api/utils.html#PTLF.utils.Component.loc">loc (Component attribute)</a>
+      </ul></li>
+      <li>
+    lwf.lab
+
+      <ul>
+        <li><a href="api/lab.html#module-lwf.lab">module</a>
 </li>
-      <li><a href="api/experiment.html#PTLF.experiment.PipeLine.log">log() (PipeLine method)</a>
+      </ul></li>
+      <li>
+    lwf.utils
+
+      <ul>
+        <li><a href="api/utils.html#module-lwf.utils">module</a>
 </li>
-      <li><a href="api/utils.html#PTLF.utils.Loss">Loss (class in PTLF.utils)</a>
-</li>
+      </ul></li>
   </ul></td>
 </tr></table>
 
 <h2 id="M">M</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/utils.html#PTLF.utils.Metric">Metric (class in PTLF.utils)</a>
-</li>
-      <li><a href="api/utils.html#PTLF.utils.Model">Model (class in PTLF.utils)</a>
-</li>
       <li>
     module
 
       <ul>
-        <li><a href="api/context.html#module-PTLF.context">PTLF.context</a>
+        <li><a href="api/context.html#module-lwf.context">lwf.context</a>
 </li>
-        <li><a href="api/experiment.html#module-PTLF.experiment">PTLF.experiment</a>
+        <li><a href="api/experiment.html#module-lwf.experiment">lwf.experiment</a>
 </li>
-        <li><a href="api/lab.html#module-PTLF.lab">PTLF.lab</a>
+        <li><a href="api/lab.html#module-lwf.lab">lwf.lab</a>
 </li>
-        <li><a href="api/utils.html#module-PTLF.utils">PTLF.utils</a>
+        <li><a href="api/utils.html#module-lwf.utils">lwf.utils</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/experiment.html#PTLF.experiment.multi_train">multi_train() (in module PTLF.experiment)</a>
-</li>
   </ul></td>
 </tr></table>
 
 <h2 id="N">N</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/experiment.html#PTLF.experiment.PipeLine.new">new() (PipeLine method)</a>
-</li>
-  </ul></td>
-</tr></table>
+      <li><a href="api/experiment.html#lwf.experiment.PipeLine.new">new() (PipeLine method)</a>
 
-<h2 id="O">O</h2>
-<table style="width: 100%" class="indextable genindextable"><tr>
-  <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/utils.html#PTLF.utils.Optimizer">Optimizer (class in PTLF.utils)</a>
+      <ul>
+        <li><a href="api/utils.html#lwf.utils.WorkFlow.new">(WorkFlow method)</a>
 </li>
+      </ul></li>
   </ul></td>
 </tr></table>
 
 <h2 id="P">P</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/experiment.html#PTLF.experiment.PipeLine">PipeLine (class in PTLF.experiment)</a>
+      <li><a href="api/experiment.html#lwf.experiment.PipeLine.paths">paths (PipeLine property)</a>
 </li>
-      <li><a href="api/experiment.html#PTLF.experiment.plot_metrics">plot_metrics() (in module PTLF.experiment)</a>
+      <li><a href="api/experiment.html#lwf.experiment.PipeLine">PipeLine (class in lwf.experiment)</a>
 </li>
-      <li><a href="api/experiment.html#PTLF.experiment.PipeLine.prepare">prepare() (PipeLine method)</a>
-</li>
-      <li>
-    PTLF.context
-
-      <ul>
-        <li><a href="api/context.html#module-PTLF.context">module</a>
-</li>
-      </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li>
-    PTLF.experiment
+      <li><a href="api/experiment.html#lwf.experiment.PipeLine.prepare">prepare() (PipeLine method)</a>
 
       <ul>
-        <li><a href="api/experiment.html#module-PTLF.experiment">module</a>
-</li>
-      </ul></li>
-      <li>
-    PTLF.lab
-
-      <ul>
-        <li><a href="api/lab.html#module-PTLF.lab">module</a>
-</li>
-      </ul></li>
-      <li>
-    PTLF.utils
-
-      <ul>
-        <li><a href="api/utils.html#module-PTLF.utils">module</a>
+        <li><a href="api/utils.html#lwf.utils.WorkFlow.prepare">(WorkFlow method)</a>
 </li>
       </ul></li>
   </ul></td>
@@ -302,7 +314,7 @@
 <h2 id="Q">Q</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/utils.html#PTLF.utils.Db.query">query() (Db method)</a>
+      <li><a href="api/utils.html#lwf.utils.Db.query">query() (Db method)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -310,29 +322,39 @@
 <h2 id="R">R</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/context.html#PTLF.context.register_libs_path">register_libs_path() (in module PTLF.context)</a>
+      <li><a href="api/context.html#lwf.context.register_libs_path">register_libs_path() (in module lwf.context)</a>
+</li>
+      <li><a href="api/experiment.html#lwf.experiment.PipeLine.reset">reset() (PipeLine method)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/experiment.html#PTLF.experiment.PipeLine.reset">reset() (PipeLine method)</a>
+      <li><a href="api/experiment.html#lwf.experiment.PipeLine.run">run() (PipeLine method)</a>
+
+      <ul>
+        <li><a href="api/utils.html#lwf.utils.WorkFlow.run">(WorkFlow method)</a>
 </li>
+      </ul></li>
   </ul></td>
 </tr></table>
 
 <h2 id="S">S</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/context.html#PTLF.context.set_shared_data">set_shared_data() (in module PTLF.context)</a>
+      <li><a href="api/context.html#lwf.context.set_shared_data">set_shared_data() (in module lwf.context)</a>
 </li>
-      <li><a href="api/utils.html#PTLF.utils.Component.setup">setup() (Component method)</a>
+      <li><a href="api/utils.html#lwf.utils.Component.setup">setup() (Component method)</a>
+</li>
+      <li><a href="api/experiment.html#lwf.experiment.PipeLine.should_running">should_running (PipeLine property)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/experiment.html#PTLF.experiment.PipeLine.should_running">should_running (PipeLine property)</a>
+      <li><a href="api/experiment.html#lwf.experiment.PipeLine.status">status() (PipeLine method)</a>
+
+      <ul>
+        <li><a href="api/utils.html#lwf.utils.WorkFlow.status">(WorkFlow method)</a>
 </li>
-      <li><a href="api/experiment.html#PTLF.experiment.PipeLine.stop_running">stop_running() (PipeLine method)</a>
-</li>
-      <li><a href="api/experiment.html#PTLF.experiment.PipeLine.sync">sync() (PipeLine method)</a>
+      </ul></li>
+      <li><a href="api/experiment.html#lwf.experiment.PipeLine.stop_running">stop_running() (PipeLine method)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -340,19 +362,7 @@
 <h2 id="T">T</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/experiment.html#PTLF.experiment.PipeLine.train">train() (PipeLine method)</a>
-</li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/experiment.html#PTLF.experiment.transfer_ppl">transfer_ppl() (in module PTLF.experiment)</a>
-</li>
-  </ul></td>
-</tr></table>
-
-<h2 id="U">U</h2>
-<table style="width: 100%" class="indextable genindextable"><tr>
-  <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/experiment.html#PTLF.experiment.PipeLine.update">update() (PipeLine method)</a>
+      <li><a href="api/experiment.html#lwf.experiment.transfer_ppl">transfer_ppl() (in module lwf.experiment)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -360,7 +370,15 @@
 <h2 id="V">V</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/experiment.html#PTLF.experiment.PipeLine.verify">verify() (PipeLine method)</a>
+      <li><a href="api/experiment.html#lwf.experiment.PipeLine.verify">verify() (PipeLine method)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="W">W</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/utils.html#lwf.utils.WorkFlow">WorkFlow (class in lwf.utils)</a>
 </li>
   </ul></td>
 </tr></table>

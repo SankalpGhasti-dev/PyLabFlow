@@ -3,7 +3,7 @@
 lab
 ===
 
-.. automodule:: PTLF.lab
+.. automodule:: lwf.lab
    :members:
    :undoc-members:
    :show-inheritance:

@@ -9,7 +9,7 @@ experiment
    :inherited-members:
    :show-inheritance:
 
-.. automodule:: PTLF.experiment
+.. automodule:: lwf.experiment
    :members:
    :undoc-members:
    :inherited-members:

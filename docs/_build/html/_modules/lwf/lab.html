@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PTLF.lab &mdash; PyTorchLabFlow 1.0 documentation</title>
+  <title>lwf.lab &mdash; PyTorchLabFlow 1.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
 
@@ -62,7 +62,7 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
-      <li class="breadcrumb-item active">PTLF.lab</li>
+      <li class="breadcrumb-item active">lwf.lab</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -71,7 +71,7 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <h1>Source code for PTLF.lab</h1><div class="highlight"><pre>
+  <h1>Source code for lwf.lab</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">create or use uor lab</span>
 <span class="sd">&quot;&quot;&quot;</span>
@@ -96,7 +96,7 @@
     <span class="k">return</span> <span class="n">pth</span>
 
 <div class="viewcode-block" id="create_project">
-<a class="viewcode-back" href="../../api/lab.html#PTLF.lab.create_project">[docs]</a>
+<a class="viewcode-back" href="../../api/lab.html#lwf.lab.create_project">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">create_project</span><span class="p">(</span><span class="n">settings</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Create the project directory structure, databases, and settings file.</span>
@@ -121,13 +121,7 @@
     <span class="c1"># Create required directories</span>
     <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;data_path&quot;</span><span class="p">,</span> <span class="s2">&quot;component_dir&quot;</span><span class="p">]:</span>
         <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">settings</span><span class="p">[</span><span class="n">key</span><span class="p">],</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="n">artf_dirs</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Configs&quot;</span><span class="p">,</span> <span class="s2">&quot;Quicks&quot;</span><span class="p">,</span> <span class="s2">&quot;Histories&quot;</span><span class="p">,</span> <span class="s2">&quot;Weights&quot;</span><span class="p">]</span>
-    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">artf_dirs</span><span class="p">:</span>
-        <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">data_path</span><span class="p">,</span> <span class="n">i</span><span class="p">),</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="k">for</span> <span class="n">parent</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;Archived&quot;</span><span class="p">,</span> <span class="s2">&quot;Transfer&quot;</span><span class="p">]:</span>
-        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">artf_dirs</span><span class="p">:</span>
-            <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">data_path</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">i</span><span class="p">),</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-
+        
     <span class="c1"># Remove old databases if any</span>
     <span class="k">for</span> <span class="n">db_file</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;logs.db&quot;</span><span class="p">,</span> <span class="s2">&quot;ppls.db&quot;</span><span class="p">]:</span>
         <span class="n">db_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">data_path</span><span class="p">,</span> <span class="n">db_file</span><span class="p">)</span>
@@ -212,6 +206,7 @@
     <span class="p">]</span>
     <span class="n">create_and_init_db</span><span class="p">(</span><span class="n">ppls_db_path</span><span class="p">,</span> <span class="n">ppls_tables</span><span class="p">)</span>
 
+    <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">settings</span><span class="p">[</span><span class="s2">&quot;data_path&quot;</span><span class="p">],</span> <span class="s2">&quot;Archived&quot;</span><span class="p">),</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="c1"># ---- Archived/ppls.db ----</span>
     <span class="n">archived_ppls_db_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">settings</span><span class="p">[</span><span class="s2">&quot;data_path&quot;</span><span class="p">],</span> <span class="s2">&quot;Archived&quot;</span><span class="p">,</span> <span class="s2">&quot;ppls.db&quot;</span><span class="p">)</span>
     <span class="n">archived_ppls_table</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
@@ -227,7 +222,7 @@
 
 
 <div class="viewcode-block" id="lab_setup">
-<a class="viewcode-back" href="../../api/lab.html#PTLF.lab.lab_setup">[docs]</a>
+<a class="viewcode-back" href="../../api/lab.html#lwf.lab.lab_setup">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">lab_setup</span><span class="p">(</span><span class="n">settings_path</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="k">if</span> <span class="n">settings_path</span> <span class="ow">and</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">settings_path</span><span class="p">):</span>
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">settings_path</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">sp</span><span class="p">:</span>
@@ -257,12 +252,12 @@
 
    
 <div class="viewcode-block" id="get_logs">
-<a class="viewcode-back" href="../../api/lab.html#PTLF.lab.get_logs">[docs]</a>
+<a class="viewcode-back" href="../../api/lab.html#lwf.lab.get_logs">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">get_logs</span><span class="p">():</span>
     <span class="n">settings</span> <span class="o">=</span> <span class="n">get_shared_data</span><span class="p">()</span>
     <span class="n">log_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">settings</span><span class="p">[</span><span class="s2">&quot;data_path&quot;</span><span class="p">],</span> <span class="s2">&quot;logs.db&quot;</span><span class="p">)</span>
     <span class="n">db</span> <span class="o">=</span> <span class="n">Db</span><span class="p">(</span><span class="n">db_path</span><span class="o">=</span><span class="n">log_path</span><span class="p">)</span>
-    <span class="n">cursor</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">&quot;SELECT * FROM logs&quot;</span><span class="p">)</span>
+    <span class="n">cursor</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;SELECT * FROM logs&quot;</span><span class="p">)</span>
     <span class="n">rows</span> <span class="o">=</span> <span class="n">cursor</span><span class="o">.</span><span class="n">fetchall</span><span class="p">()</span>
     <span class="n">col_names</span> <span class="o">=</span> <span class="p">[</span><span class="n">desc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">desc</span> <span class="ow">in</span> <span class="n">cursor</span><span class="o">.</span><span class="n">description</span><span class="p">]</span>
     <span class="n">db</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>

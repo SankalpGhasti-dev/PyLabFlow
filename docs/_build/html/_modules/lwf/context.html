@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PTLF.context &mdash; PyTorchLabFlow 1.0 documentation</title>
+  <title>lwf.context &mdash; PyTorchLabFlow 1.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
 
@@ -62,7 +62,7 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
-      <li class="breadcrumb-item active">PTLF.context</li>
+      <li class="breadcrumb-item active">lwf.context</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -71,7 +71,7 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <h1>Source code for PTLF.context</h1><div class="highlight"><pre>
+  <h1>Source code for lwf.context</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">This module manages shared runtime context across different parts of an application.</span>
 <span class="sd">It tracks session-specific data, caller identification (e.g., Jupyter, scripts), and allows for</span>
@@ -130,7 +130,7 @@
 
 <span class="c1"># Function to get data for the current context</span>
 <div class="viewcode-block" id="get_shared_data">
-<a class="viewcode-back" href="../../api/context.html#PTLF.context.get_shared_data">[docs]</a>
+<a class="viewcode-back" href="../../api/context.html#lwf.context.get_shared_data">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">get_shared_data</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Retrieve the shared data dictionary associated with the current context.</span>
@@ -149,7 +149,7 @@
 
 
 <div class="viewcode-block" id="set_shared_data">
-<a class="viewcode-back" href="../../api/context.html#PTLF.context.set_shared_data">[docs]</a>
+<a class="viewcode-back" href="../../api/context.html#lwf.context.set_shared_data">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">set_shared_data</span><span class="p">(</span><span class="n">data</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">logid</span><span class="p">:</span> <span class="nb">str</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Set the shared data dictionary for the current context.</span>
@@ -180,7 +180,7 @@
 
 
 <div class="viewcode-block" id="get_caller">
-<a class="viewcode-back" href="../../api/context.html#PTLF.context.get_caller">[docs]</a>
+<a class="viewcode-back" href="../../api/context.html#lwf.context.get_caller">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">get_caller</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Identify the current session or script origin.</span>
@@ -199,7 +199,7 @@
 
 
 <div class="viewcode-block" id="register_libs_path">
-<a class="viewcode-back" href="../../api/context.html#PTLF.context.register_libs_path">[docs]</a>
+<a class="viewcode-back" href="../../api/context.html#lwf.context.register_libs_path">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">register_libs_path</span><span class="p">(</span><span class="n">libs_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Add a local library directory to Python&#39;s sys.path if it exists.</span>

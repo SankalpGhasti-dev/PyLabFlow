@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Overview &mdash; PyTorchLabFlow 1.0 documentation</title>
+  <title>Framework Overview &mdash; PyTorchLabFlow 1.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
 
@@ -20,7 +20,7 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Workflows" href="workflow.html" />
+    <link rel="next" title="Workflow Guide" href="workflow.html" />
     <link rel="prev" title="user guide" href="index.html" /> 
 </head>
 
@@ -46,19 +46,15 @@
               <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">user guide</a><ul class="current">
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Overview</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#component">Component</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#key-features">Key Features</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#core-base-class-component">Core Base Class: <code class="docutils literal notranslate"><span class="pre">Component</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#specialized-component-types">Specialized Component Types</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#example-defining-a-custom-model">Example: Defining a Custom Model</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#nesting-components-example">Nesting Components Example</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Framework Overview</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#component">1. Component</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#workflow">2. Workflow</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pipeline">3. Pipeline</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#hierarchical-view">4. Hierarchical View</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#design-philosophy">5. Design Philosophy</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="#pipeline">Pipeline</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="workflow.html">Workflows</a></li>
+<li class="toctree-l2"><a class="reference internal" href="workflow.html">Workflow Guide</a></li>
 <li class="toctree-l2"><a class="reference internal" href="templates.html">Templates</a></li>
 </ul>
 </li>
@@ -81,7 +77,7 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="index.html">user guide</a></li>
-      <li class="breadcrumb-item active">Overview</li>
+      <li class="breadcrumb-item active">Framework Overview</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/user_guide/concepts.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -91,123 +87,142 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="overview">
-<h1>Overview<a class="headerlink" href="#overview" title="Link to this heading"></a></h1>
-<p>PyTorchLabFlow is a modular deep learning framework designed for building flexible, reusable, and composable deep learning pipelines.</p>
-<p>In PyTorchLabFlow, <strong>everything is a Component</strong>—from models and datasets to losses, optimizers, and custom blocks. This modular design enables users to configure, nest, and reuse components dynamically, simplifying the construction and maintenance of complex deep learning workflows.</p>
+  <section id="framework-overview">
+<h1>Framework Overview<a class="headerlink" href="#framework-overview" title="Link to this heading"></a></h1>
+<p>This framework provides a modular and reproducible environment for managing experiments.
+It introduces three core concepts — <strong>Component</strong>, <strong>Workflow</strong>, and <strong>Pipeline</strong> — each
+representing a different layer of abstraction and flexibility in the experimental process.</p>
+<p>These concepts allow users to design, execute, and reproduce complex computational or
+machine learning experiments with a clear separation of concerns between logic,
+configuration, and execution history.</p>
+<nav class="contents local" id="contents">
+<ul class="simple">
+<li><p><a class="reference internal" href="#component" id="id1">1. Component</a></p></li>
+<li><p><a class="reference internal" href="#workflow" id="id2">2. Workflow</a></p></li>
+<li><p><a class="reference internal" href="#pipeline" id="id3">3. Pipeline</a></p></li>
+<li><p><a class="reference internal" href="#hierarchical-view" id="id4">4. Hierarchical View</a></p></li>
+<li><p><a class="reference internal" href="#design-philosophy" id="id5">5. Design Philosophy</a></p></li>
+</ul>
+</nav>
 <section id="component">
-<h2>Component<a class="headerlink" href="#component" title="Link to this heading"></a></h2>
+<h2><a class="toc-backref" href="#id1" role="doc-backlink">1. Component</a><a class="headerlink" href="#component" title="Link to this heading"></a></h2>
+<p>A <strong>Component</strong> is the smallest reusable unit in the framework.
+It represents a <strong>functional block</strong> — such as a data loader, model, optimizer, or evaluator —
+that performs a single, well-defined task.</p>
+<p>A component can be:</p>
 <ul class="simple">
-<li><p>A <strong>Component</strong> is a reusable, self-contained code block that can represent a model, dataset, optimizer, loss function, or any processing step.</p></li>
-<li><p>Each Component is identified by:
-- <code class="docutils literal notranslate"><span class="pre">loc</span></code>: a string specifying the Python import path of the component class.
-- <code class="docutils literal notranslate"><span class="pre">args</span></code>: a dictionary containing parameters to configure or initialize the component.</p></li>
-<li><p>Components support <strong>infinite nesting</strong>, allowing other components to be passed as parameters inside <code class="docutils literal notranslate"><span class="pre">args</span></code>.</p></li>
+<li><p>A <strong>Python function</strong> or <strong>class</strong> encapsulated in a file.</p></li>
+<li><p>A <strong>reference</strong> to a shared resource, library, or custom code base.</p></li>
+<li><p>A <strong>configurable unit</strong>, whose behavior depends on arguments specified at runtime.</p></li>
 </ul>
-<section id="key-features">
-<h3>Key Features<a class="headerlink" href="#key-features" title="Link to this heading"></a></h3>
+<p><strong>Key Ideas</strong></p>
 <ul class="simple">
-<li><p><strong>Dynamic Loading</strong>: Components are loaded at runtime using the <code class="docutils literal notranslate"><span class="pre">loc</span></code> string and initialized with <code class="docutils literal notranslate"><span class="pre">args</span></code>.</p></li>
-<li><p><strong>Argument Validation</strong>: Each component declares required arguments which are validated during setup.</p></li>
-<li><p><strong>Deep Nesting</strong>: Components can include other components inside their <code class="docutils literal notranslate"><span class="pre">args</span></code> dictionary for flexible pipeline composition.</p></li>
+<li><p><strong>Reusability:</strong> Components can be reused across different workflows and pipelines.</p></li>
+<li><p><strong>Configurability:</strong> Each component can have a flexible configuration (<cite>args</cite>) dictionary.</p></li>
+<li><p><strong>Isolation:</strong> Components do not depend directly on other components — they only define
+<em>what</em> they do, not <em>when</em> they run.</p></li>
 </ul>
-</section>
-<section id="core-base-class-component">
-<h3>Core Base Class: <code class="docutils literal notranslate"><span class="pre">Component</span></code><a class="headerlink" href="#core-base-class-component" title="Link to this heading"></a></h3>
-<p>The abstract <code class="docutils literal notranslate"><span class="pre">Component</span></code> class provides core setup logic:</p>
-<ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">check_args(args:</span> <span class="pre">dict)</span></code>: Checks if all required arguments are provided.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">setup(args:</span> <span class="pre">dict)</span></code>: Validates arguments and calls the subclass’s <code class="docutils literal notranslate"><span class="pre">_setup()</span></code> method to build the component.</p></li>
-</ul>
-</section>
-<section id="specialized-component-types">
-<h3>Specialized Component Types<a class="headerlink" href="#specialized-component-types" title="Link to this heading"></a></h3>
-<table class="docutils align-default" id="id1">
-<caption><span class="caption-text">Component Overview</span><a class="headerlink" href="#id1" title="Link to this table"></a></caption>
-<colgroup>
-<col style="width: 20.0%" />
-<col style="width: 20.0%" />
-<col style="width: 60.0%" />
-</colgroup>
-<thead>
-<tr class="row-odd"><th class="head"><p>Type</p></th>
-<th class="head"><p>Class</p></th>
-<th class="head"><p>Inherits From</p></th>
-</tr>
-</thead>
-<tbody>
-<tr class="row-even"><td><p>Model</p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">Model</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">Component</span></code>, <code class="docutils literal notranslate"><span class="pre">torch.nn.Module</span></code></p></td>
-</tr>
-<tr class="row-odd"><td><p>Dataset</p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">DataSet</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">Component</span></code>, <code class="docutils literal notranslate"><span class="pre">torch.utils.data.Dataset</span></code></p></td>
-</tr>
-<tr class="row-even"><td><p>Loss</p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">Loss</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">Component</span></code>, <code class="docutils literal notranslate"><span class="pre">torch.nn.Module</span></code></p></td>
-</tr>
-<tr class="row-odd"><td><p>Optimizer</p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">Optimizer</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">Component</span></code>, <code class="docutils literal notranslate"><span class="pre">torch.nn.Module</span></code></p></td>
-</tr>
-<tr class="row-even"><td><p>Metric</p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">Metric</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">Component</span></code>, <code class="docutils literal notranslate"><span class="pre">torch.nn.Module</span></code></p></td>
-</tr>
-</tbody>
-</table>
-<ul class="simple">
-<li><p><strong>DataSet</strong>: feeds  data to model from files, you can fuse processing steps inside it.</p></li>
-<li><p><strong>Model</strong>: conventional <cite>torch.nn.Module</cite>  but  <cite>PyTorchLabFlow</cite>’s  wrapper,</p></li>
-<li><p><strong>Metric</strong>: your megtric functions otherthan loss</p></li>
-<li><p><strong>Loss</strong>: the loss function, grad calculation</p></li>
-<li><p><strong>Optimizer</strong>: your optimizer</p></li>
-</ul>
-</section>
-<section id="example-defining-a-custom-model">
-<h3>Example: Defining a Custom Model<a class="headerlink" href="#example-defining-a-custom-model" title="Link to this heading"></a></h3>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">MyModel</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;input_dim&quot;</span><span class="p">,</span> <span class="s2">&quot;output_dim&quot;</span><span class="p">}</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="nf">_setup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">linear</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="s2">&quot;input_dim&quot;</span><span class="p">],</span> <span class="n">args</span><span class="p">[</span><span class="s2">&quot;output_dim&quot;</span><span class="p">])</span>
-        <span class="k">return</span> <span class="bp">self</span>
-</pre></div>
-</div>
-</section>
-<section id="nesting-components-example">
-<h3>Nesting Components Example<a class="headerlink" href="#nesting-components-example" title="Link to this heading"></a></h3>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
-    <span class="s2">&quot;loc&quot;</span><span class="p">:</span> <span class="s2">&quot;my_project.models.TransformerClassifier&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;args&quot;</span><span class="p">:</span> <span class="p">{</span>
-        <span class="s2">&quot;backbone&quot;</span><span class="p">:</span> <span class="p">{</span>
-            <span class="s2">&quot;loc&quot;</span><span class="p">:</span> <span class="s2">&quot;my_project.models.TransformerEncoder&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;args&quot;</span><span class="p">:</span> <span class="p">{</span>
-                <span class="s2">&quot;dim&quot;</span><span class="p">:</span> <span class="mi">256</span><span class="p">,</span>
-                <span class="s2">&quot;depth&quot;</span><span class="p">:</span> <span class="mi">6</span>
-            <span class="p">}</span>
-        <span class="p">},</span>
-        <span class="s2">&quot;num_classes&quot;</span><span class="p">:</span> <span class="mi">10</span>
-    <span class="p">}</span>
+<p><strong>Example</strong></p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;loc&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;components.data.load_dataset&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;args&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;path&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;./data/train.csv&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;batch_size&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">32</span>
+<span class="w">    </span><span class="p">}</span>
 <span class="p">}</span>
 </pre></div>
 </div>
+<p>In this example, the component loads a dataset and exposes it to downstream steps.
+The <cite>“loc”</cite> field points to the function to execute, and <cite>“args”</cite> defines how it behaves.</p>
+<p>This separation of <em>location</em> and <em>arguments</em> allows the same logical component to be
+reused in many workflows with different parameters — increasing modularity.</p>
 </section>
-</section>
-<section id="pipeline">
-<h2>Pipeline<a class="headerlink" href="#pipeline" title="Link to this heading"></a></h2>
-<p>A Pipeline orchestrates and manages all components of a machine learning experiment. It serializes the experiment’s configuration, including the model, dataset, and hyperparameters, into a unique, identifiable setup. Each pipeline instance, identified by a unique expid, ensures that experiments are reproducible and their configurations are unique.</p>
-<p>To initialize a new experiment from scratch, you can use the new() method.</p>
-<p>Alternatively, if you wish to create a new experiment based on a previous one, perhaps to fine-tune a model or slightly alter hyperparameters, you can use the use() method. This inherits the configuration from an existing experiment, allowing you to apply specific changes.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Create a new pipeline based on an existing one</span>
-<span class="n">P</span> <span class="o">=</span> <span class="n">PipeLine</span><span class="p">()</span>
-<span class="n">P</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="n">use_exp</span><span class="o">=</span><span class="s1">&#39;my_first_experiment&#39;</span><span class="p">,</span> <span class="n">expid</span><span class="o">=</span><span class="s1">&#39;fine_tuned_experiment&#39;</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="n">new_args</span><span class="p">)</span>
+<section id="workflow">
+<h2><a class="toc-backref" href="#id2" role="doc-backlink">2. Workflow</a><a class="headerlink" href="#workflow" title="Link to this heading"></a></h2>
+<p>A <strong>Workflow</strong> defines <strong>the structure and order</strong> in which components are executed.
+While a component is a single building block, a workflow describes <em>how components connect</em>.</p>
+<p>Think of a workflow as a <strong>template or blueprint</strong> for a process.
+It defines <em>what happens</em> and <em>in what sequence</em> but does not fix the data or model parameters.</p>
+<p><strong>Key Ideas</strong></p>
+<ul class="simple">
+<li><p><strong>Declarative Composition:</strong> A workflow lists components and their dependencies.</p></li>
+<li><p><strong>Dynamic Construction:</strong> Workflows can be loaded from JSON, YAML, or Python definitions.</p></li>
+<li><p><strong>Reproducibility:</strong> The same workflow can be reused across multiple runs, ensuring consistency.</p></li>
+</ul>
+<p><strong>Example</strong></p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;workflow&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;loc&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;components.training.supervised_training&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;template&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;load_data&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;build_model&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;train&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;evaluate&quot;</span><span class="p">]</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="nt">&quot;args&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;load_data&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;loc&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;components.data.load_dataset&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;args&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;path&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;data/train.csv&quot;</span><span class="p">}},</span>
+<span class="w">        </span><span class="nt">&quot;build_model&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;loc&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;components.model.create_cnn&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;args&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;num_layers&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">}},</span>
+<span class="w">        </span><span class="nt">&quot;train&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;loc&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;components.training.train_epoch&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;args&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;epochs&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="p">}},</span>
+<span class="w">        </span><span class="nt">&quot;evaluate&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">&quot;loc&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;components.eval.compute_accuracy&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;args&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{}}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
 </pre></div>
 </div>
+<p>Here, the workflow specifies <strong>the topology</strong> of execution (the “template”) and how each step
+is realized via components.</p>
+<p>Each step can be substituted or reconfigured without breaking the structure.
+This makes workflows <strong>flexible, composable, and shareable</strong> across projects.</p>
+</section>
+<section id="pipeline">
+<h2><a class="toc-backref" href="#id3" role="doc-backlink">3. Pipeline</a><a class="headerlink" href="#pipeline" title="Link to this heading"></a></h2>
+<p>A <strong>Pipeline</strong> is a <strong>runtime instantiation</strong> of a workflow with concrete settings, logs,
+and status tracking.</p>
+<p>While a workflow defines <em>what should happen</em>, a pipeline defines <em>what actually happened</em>.</p>
+<p>It binds together:
+- The workflow definition.
+- The specific component configurations.
+- Metadata about the environment, logs, and execution history.</p>
+<p>Each pipeline has a unique identifier (<cite>pplid</cite>) and is tracked in a database (<cite>ppls.db</cite>),
+which stores:
+- Pipeline metadata (hashes, creation time, status).
+- Relationships between pipelines (via the <cite>edges</cite> table).
+- Active runs (<cite>runnings</cite> table).</p>
+<p><strong>Pipeline Lifecycle</strong></p>
+<ol class="arabic simple">
+<li><p><strong>Creation:</strong>
+A pipeline is created using <cite>PipeLine(pplid=…)</cite>, loading its configuration and workflow.</p></li>
+<li><p><strong>Preparation:</strong>
+It sets up its directories, loads components, and initializes resources.</p></li>
+<li><p><strong>Execution:</strong>
+The pipeline runs through its workflow components in order (or dynamically).</p></li>
+<li><p><strong>Status Tracking:</strong>
+Each run is recorded in the database, making pipelines reproducible and auditable.</p></li>
+<li><p><strong>Archival / Transfer:</strong>
+Finished pipelines can be archived, deleted, or transferred between environments,
+preserving their full state.</p></li>
+</ol>
+<p><strong>Flexibility</strong></p>
+<ul class="simple">
+<li><p>You can create many pipelines from a single workflow with different component arguments.</p></li>
+<li><p>You can rerun or resume a pipeline at any stage.</p></li>
+<li><p>Pipelines can be programmatically filtered, grouped, and compared using utilities like:
+- <code class="xref py py-func docutils literal notranslate"><span class="pre">experiment.get_ppl_status()</span></code>
+- <code class="xref py py-func docutils literal notranslate"><span class="pre">experiment.filter_ppls()</span></code>
+- <code class="xref py py-func docutils literal notranslate"><span class="pre">experiment.group_by_common_columns()</span></code></p></li>
+</ul>
+</section>
+<section id="hierarchical-view">
+<h2><a class="toc-backref" href="#id4" role="doc-backlink">4. Hierarchical View</a><a class="headerlink" href="#hierarchical-view" title="Link to this heading"></a></h2>
+<p>Together, these layers create a <strong>flexible, declarative, and traceable experimental system</strong>
+that supports both <strong>research iteration</strong> and <strong>production reproducibility</strong>.</p>
+</section>
+<section id="design-philosophy">
+<h2><a class="toc-backref" href="#id5" role="doc-backlink">5. Design Philosophy</a><a class="headerlink" href="#design-philosophy" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><strong>Modularity:</strong> Each layer is independent and composable.</p></li>
+<li><p><strong>Transparency:</strong> All configurations and runs are logged and queryable.</p></li>
+<li><p><strong>Reproducibility:</strong> Every experiment can be reloaded, re-executed, or audited.</p></li>
+<li><p><strong>Portability:</strong> Pipelines and workflows can be transferred between machines or environments.</p></li>
+<li><p><strong>Scalability:</strong> Supports many experiments with shared or divergent configurations.</p></li>
+</ul>
+<p>This design makes it easy to iterate on ideas quickly while preserving the integrity and
+traceability of experimental data — crucial for scientific and ML workflows alike.</p>
 </section>
 </section>
 
@@ -216,7 +231,7 @@
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="index.html" class="btn btn-neutral float-left" title="user guide" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="workflow.html" class="btn btn-neutral float-right" title="Workflows" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="workflow.html" class="btn btn-neutral float-right" title="Workflow Guide" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

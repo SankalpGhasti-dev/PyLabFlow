@@ -163,36 +163,115 @@ class Component(ABC):
         raise NotImplementedError(f"Component '{self.loc}' must implement '_setup'")
 
 class WorkFlow(Component, ABC):
-    
-    def __init__(self, loc = None):
-        super().__init__(loc)
-        self.paths = []
-    
-    @abstractmethod
-    def run(self):
-        raise NotImplementedError(f"Workflow '{self.loc}' must implement 'run'")
+    """
+    Abstract base class for all workflows.
+
+    Workflows are intended to be managed by the `PipeLine` class. 
+    When a pipeline is created via `PipeLine.new()`, it takes a workflow configuration,
+    instantiates the workflow, and passes the workflow-specific arguments to it. 
+    Therefore, all required workflow parameters should be validated at this point 
+    using the workflow's template.
+
+    ----------------------------
+    GUIDELINES
+    ----------------------------
+
+    1. Initialization and Argument Validation
+       - When `PipeLine.new()` is called:
+           * The pipeline verifies that the workflow exists and is properly defined.
+           * All workflow-specific arguments (`args`) should be checked against the workflow's
+             template to ensure completeness and correctness.
+           * Duplicate configurations (same args) should be detected and prevented.
+       - The workflow must implement a `new(name: str, **kwargs)` method to initialize itself
+         with workflow-specific arguments.
+
+    2. Preparation
+       - The workflow's `prepare()` method is called by the pipeline to initialize
+         all necessary components or resources required for execution.
+       - Workflow implementations should convert any required objects or configuration
+         entries from the pipeline config (`self.P.cnfg`) into Python objects here.
+       - After `prepare()` completes, `run()` should be safe to execute.
+
+    3. Execution
+       - The workflow's `run()` method is called by the pipeline when execution starts.
+       - `run()` should implement the main computation or processing according to the workflow's purpose.
+       - Workflows should assume that `prepare()` has already been called.
+
+    4. Path Management
+       - Workflows must implement `get_path(of: str, args: Optional[Dict] = None) -> str`.
+       - The pipeline only handles the path for the configuration file; all other paths
+         are redirected to the workflow.
+       - All output, intermediate, or artifact paths should be tracked in `self.paths`.
+       - Avoid hard-coded paths; always generate paths dynamically so pipelines can move or copy artifacts safely.
+
+    5. Optional Methods
+       - `clean()`: Delete temporary files, cached outputs, or intermediate artifacts.
+       - `status() -> str`: Return workflow status or progress information.
+       - These methods are called by the pipeline when needed.
+
+    6. Best Practices
+       - Ensure deterministic behavior: same inputs should produce the same outputs.
+       - Handle missing resources or exceptions gracefully with clear error messages.
+       - Use consistent naming for workflow IDs, versions, and artifact paths.
+       - Load components dynamically via `self.load_component`.
+       - Workflows should be independent of any specific domain or technology.
+
+    ----------------------------
+    REQUIRED METHODS
+    ----------------------------
+    - new(self, name: str, **kwargs)
+    - prepare(self, *args, **kwargs)
+    - run(self, *args, **kwargs)
+    - get_path(self, of: str, args: Optional[Dict] = None) -> str
+
+    ----------------------------
+    OPTIONAL METHODS
+    ----------------------------
+    - clean(self, *args, **kwargs)
+    - status(self, *args, **kwargs) -> str
+    """
 
     @abstractmethod
-    def prepare(self):
-        raise NotImplementedError(f"Workflow '{self.loc}' must implement 'prepare'")
+    def prepare(self, *args, **kwargs):
+        """
+        Called when PipeLine.prepare() is executed.
+        Convert necessary components from the configuration dictionary
+        into Python objects here so that the workflow is ready for run().
+        """
 
     @abstractmethod
-    def new(self):
-        raise NotImplementedError(f"Workflow '{self.loc}' must implement 'new'")
-    
-    @abstractmethod
-    def get_path(self,
-        of: str,
-        pplid: Optional[str] = None,
-        args: Optional[Dict] = None):
-        raise NotImplementedError(f"Workflow '{self.loc}' must implement 'get_path'")
+    def run(self, *args, **kwargs):
+        """
+        Called when PipeLine.run() is executed.
+        Implement the main computation or processing logic here.
+        """
 
     @abstractmethod
-    def clean(self):
-        raise NotImplementedError(f"Workflow '{self.loc}' must implement 'clean'")
-    
+    def new(self, name: str, **kwargs):
+        """
+        Initialize a new workflow instance with the given name and arguments.
+        """
+
     @abstractmethod
-    def status(self):
+    def get_path(self, of: str, args: Optional[Dict] = None) -> str:
+        """
+        Return a standardized path for the requested artifact type (`of`).
+        All workflow-specific path options should be listed in `self.paths`.
+        This ensures that when a pipeline is transferred, all artifacts are correctly located.
+        """
+
+
+    def clean(self, *args, **kwargs):
+        """
+        Clean up temporary files, cached outputs, or intermediate artifacts.
+        """
+        pass
+
+
+    def status(self, *args, **kwargs) -> str:
+        """
+        Return the current status or progress of the workflow.
+        """
         return {}
 
 class Db:
@@ -326,6 +405,26 @@ def extract_all_locs(d: Union[Dict, List]) -> List[str]:
 from typing import Union, Dict, List
 
 def get_invalid_loc_queries(d: Union[Dict, List], parent_key: str = "") -> List[str]:
+    """
+    Recursively search a nested dictionary or list for invalid 'loc' entries.
+
+    A 'loc' entry is considered invalid if it is not a string or does not contain a dot ('.').
+
+    Parameters
+    ----------
+    d : Union[Dict, List]
+        The nested dictionary or list to inspect.
+    parent_key : str, optional
+        The concatenated key path used during recursion, by default "".
+        This helps identify where in the nested structure the invalid 'loc' is.
+
+    Returns
+    -------
+    List[str]
+        A list of key paths (strings) to all invalid 'loc' entries found.
+        Each path uses '>' for dict keys and '[index]' for list indices.
+    """
+
     queries = []
 
     if isinstance(d, dict):
@@ -348,6 +447,22 @@ def get_invalid_loc_queries(d: Union[Dict, List], parent_key: str = "") -> List[
     return queries
 
 def _flatten_nested_locs(data: Dict[str, Any]) -> Dict[str, Any]:
+    """
+    Flatten nested dictionaries by extracting the 'loc' value from inner dictionaries.
+
+    For each top-level key in the dictionary, if its value is a dictionary and contains
+    nested dictionaries, the nested dictionary is replaced with its 'loc' value.
+
+    Parameters
+    ----------
+    data : Dict[str, Any]
+        Dictionary with potentially nested dictionaries to flatten.
+
+    Returns
+    -------
+    Dict[str, Any]
+        The modified dictionary where nested dictionaries are replaced by their 'loc' value.
+    """
     for exp in data:
         if isinstance(data[exp], dict):
             for key in list(data[exp].keys()):
@@ -357,6 +472,25 @@ def _flatten_nested_locs(data: Dict[str, Any]) -> Dict[str, Any]:
 
 
 def _apply_key_filter(data: Dict[str, Any], q: str) -> Dict[str, Any]:
+    """
+    Filter a dictionary by extracting the value corresponding to a specific key.
+
+    If the value of `q` is a dictionary, it extracts the 'loc' value.
+    If it is a simple value (str or int), it keeps it. Otherwise, the entry is removed.
+
+    Parameters
+    ----------
+    data : Dict[str, Any]
+        The input dictionary where each value is a dictionary.
+    q : str
+        The key to filter and extract from each value dictionary.
+
+    Returns
+    -------
+    Dict[str, Any]
+        A dictionary where each top-level key now maps to the extracted 'loc' value,
+        simple value, or is removed if no valid value exists.
+    """
     for exp in list(data.keys()):
         val = data[exp].get(q)
         if isinstance(val, dict):

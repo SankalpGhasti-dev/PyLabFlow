@@ -3,7 +3,7 @@
 context
 ========
 
-.. automodule:: PTLF.context
+.. automodule:: lwf.context
    :members:
    :undoc-members:
    :show-inheritance:
