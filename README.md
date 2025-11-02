@@ -1,4 +1,12 @@
 # LwFlow (Lab workFlow)
+<div align="center">
+
+[![Documentation Status](https://readthedocs.org/projects/lwflow/badge/?version=latest)](https://lwflow.readthedocs.io/en/latest/?badge=latest) 
+[![PyPI version](https://badge.fury.io/py/LwFlow.svg?icon=si%3Apython)](https://pypi.org/project/LwFlow/)
+[![PyPI Downloads](https://static.pepy.tech/personalized-badge/Lwflow?period=total&units=INTERNATIONAL_SYSTEM&left_color=BLACK&right_color=GREEN&left_text=downloads)](https://pepy.tech/projects/LwFlow)
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](./LICENSE)
+
+</div>
 
 ## Domain-Independent, Secure, and Offline Computational Research Management
 
