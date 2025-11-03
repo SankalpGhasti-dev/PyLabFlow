@@ -5,7 +5,7 @@ sys.path.insert(0, os.path.abspath('../src'))
 
 # print("sys.path:", sys.path)
 
-project = 'PyTorchLabFlow'
+project = 'PyLabFlow'
 copyright = '2025, BBEK-Anand'
 author = 'BBEK-Anand'
 release = '1.0'
