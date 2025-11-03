@@ -1,18 +1,18 @@
-# LwFlow (Lab workFlow)
+# PyLabFlow 
 <div align="center">
 
-[![Documentation Status](https://readthedocs.org/projects/lwflow/badge/?version=latest)](https://lwflow.readthedocs.io/en/latest/?badge=latest) 
-[![PyPI version](https://badge.fury.io/py/LwFlow.svg?icon=si%3Apython)](https://pypi.org/project/LwFlow/)
-[![PyPI Downloads](https://static.pepy.tech/personalized-badge/Lwflow?period=total&units=INTERNATIONAL_SYSTEM&left_color=BLACK&right_color=GREEN&left_text=downloads)](https://pepy.tech/projects/LwFlow)
+[![Documentation Status](https://readthedocs.org/projects/PyLabFlow/badge/?version=latest)](https://PyLabFlow.readthedocs.io/en/latest/?badge=latest) 
+[![PyPI version](https://badge.fury.io/py/PyLabFlow.svg?icon=si%3Apython)](https://pypi.org/project/PyLabFlow/)
+[![PyPI Downloads](https://static.pepy.tech/personalized-badge/PyLabFlow?period=total&units=INTERNATIONAL_SYSTEM&left_color=BLACK&right_color=GREEN&left_text=downloads)](https://pepy.tech/projects/PyLabFlow)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](./LICENSE)
 
 </div>
 
 ## Domain-Independent, Secure, and Offline Computational Research Management
 
-LwFlow is a self-contained Python framework for managing computational research experiments. It is designed to work with various domains, from machine learning and data processing to simulation and numerical analysis. Built on the principles of flexibility, reproducibility, and data privacy, LwFlow allows researchers to define, run, track, and transfer entire custom workflows offline.
+PyLabFlow is a self-contained Python framework for managing computational research experiments. It is designed to work with various domains, from machine learning and data processing to simulation and numerical analysis. Built on the principles of flexibility, reproducibility, and data privacy, PyLabFlow allows researchers to define, run, track, and transfer entire custom workflows offline.
 
-LwFlow is **domain-agnostic**, leveraging abstract `Component` and `WorkFlow` classes that users can customize to fit their needs. This makes it ideal for use with frameworks like **PyTorch**, **TensorFlow**, or any other complex pipeline structures used in scientific computing.
+PyLabFlow is **domain-agnostic**, leveraging abstract `Component` and `WorkFlow` classes that users can customize to fit their needs. This makes it ideal for use with frameworks like **PyTorch**, **TensorFlow**, or any other complex pipeline structures used in scientific computing.
 
 ---
 
@@ -40,11 +40,11 @@ LwFlow is **domain-agnostic**, leveraging abstract `Component` and `WorkFlow` cl
 
 ## 🛠 Installation
 
-You can install **LwFlow** using pip:
+You can install **PyLabFlow** using pip:
 
 ```
 
-pip install lwflow
+pip install PyLabFlow
 
 ```
 
@@ -52,8 +52,8 @@ Alternatively, clone the repository for development purposes:
 
 ```
 
-git clone [https://github.com/ExperQuick/lwf.git](https://github.com/ExperQuick/lwf.git)
-cd LwFlow
+git clone [https://github.com/ExperQuick/PyLabFlow.git](https://github.com/ExperQuick/PyLabFlow.git)
+cd PyLabFlow
 pip install -e .
 
 ````
@@ -62,7 +62,7 @@ pip install -e .
 
 ## 🚀 Getting Started: Running an Experiment Pipeline
 
-LwFlow structures work around **Labs** (your project environment) and **Pipelines (PPLs)** (customizable experiment runs).
+PyLabFlow structures work around **Labs** (your project environment) and **Pipelines (PPLs)** (customizable experiment runs).
 
 ### 1. Setting Up the Lab Environment
 
@@ -70,7 +70,7 @@ The Lab manages file paths and databases. You only need to run this once per pro
 
 ```python
 import os
-from lwf.lab import create_project, lab_setup
+from plf.lab import create_project, lab_setup
 
 # Define mandatory project settings
 SETTINGS = {
@@ -91,11 +91,11 @@ lab_setup(settings_path)
 
 ### 2. Defining a Custom WorkFlow
 
-Since LwFlow is domain-independent, you define your experiment logic by subclassing `WorkFlow` and `Component`.
+Since PyLabFlow is domain-independent, you define your experiment logic by subclassing `WorkFlow` and `Component`.
 
 ```python
 import os
-from lwf.utils import WorkFlow, Component
+from plf.utils import WorkFlow, Component
 from typing import Dict, Any
 
 # A generic computational component
@@ -147,7 +147,7 @@ class GenericDataWorkflow(WorkFlow):
 Once your components are defined, you can create and execute the pipeline using the `PipeLine` class.
 
 ```python
-from lwf.experiment import PipeLine
+from plf.experiment import PipeLine
 
 # Define the full configuration with fully qualified paths to components
 pipeline_config = {
@@ -176,7 +176,7 @@ P.run()
 
 ## 💾 Experiment Management Tools
 
-The `lwf.experiment` module provides powerful tools for managing your PPL database:
+The `plf.experiment` module provides powerful tools for managing your PPL database:
 
 * **`get_ppls()`**: List all active pipeline IDs in the current Lab.
 * **`get_ppl_status()`**: Returns a DataFrame summarizing the status, last run, and key metrics for all PPLs.

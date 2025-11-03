@@ -16,7 +16,7 @@
 from setuptools import setup, find_packages
 
 setup(
-    name='LwFlow',
+    name='PyLabFlow',
     version='0.1',
     package_dir={'': 'src'},
     packages=find_packages(where='src'),
@@ -26,10 +26,10 @@ setup(
     ],
     author='BBEK-Anand',
     author_email='',
-    description='LwFlow is a lightweight framework that simplifies experiment management, reducing setup time with reusable components for training, logging, and checkpointing. It streamlines workflows, making it ideal for fast and efficient experimentation.',
+    description='PyLabFlow is a lightweight framework that simplifies experiment management, reducing setup time with reusable components for training, logging, and checkpointing. It streamlines workflows, making it ideal for fast and efficient experimentation.',
     long_description=open('./README.md').read(),
     long_description_content_type='text/markdown',
-    url='https://github.com/ExperQuick/LwFlow',
+    url='https://github.com/ExperQuick/PyLabFlow',
     license="Apache-2.0",
     classifiers=[
         'Programming Language :: Python :: 3',
