@@ -5,7 +5,7 @@ Quick Start
 
    .. code-block:: bash
 
-      conda create -n plf_env python=3.10
+      conda create -n plf_env
       conda activate plf_env
 
 2. **Install required packages**
