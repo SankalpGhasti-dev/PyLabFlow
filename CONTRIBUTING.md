@@ -1,6 +1,6 @@
-# Contributing to LwFlow 🧪
+# Contributing to PyLabFlow 🧪
 
-First off, thank you for considering contributing to LwFlow! We're thrilled you're here. This project is built by the community, for the community, and we welcome any contribution, from fixing typos to implementing major new features.
+First off, thank you for considering contributing to PyLabFlow! We're thrilled you're here. This project is built by the community, for the community, and we welcome any contribution, from fixing typos to implementing major new features.
 
 This document provides guidelines to help make the contribution process easy and effective for everyone involved.
 
@@ -26,15 +26,15 @@ Unsure where to begin? A great place to start is by looking for issues tagged `g
 Ready to contribute code or documentation? Here’s how to set up your environment and submit a pull request.
 
 #### 1. Fork the Repository
-Click the "Fork" button at the top right of the [LwFlow GitHub page](https://github.com/BBEK-Anand/LwFlow) to create your own copy.
+Click the "Fork" button at the top right of the [PyLabFlow GitHub page](https://github.com/ExperQuick/PyLabFlow) to create your own copy.
 
 #### 2. Clone Your Fork
 Clone your forked repository to your local machine.
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/LwFlow.git
+git clone https://github.com/YOUR_USERNAME/PyLabFlow.git
 
-cd LwFlow
+cd PyLabFlow
 ```
 
 #### 3\. Create a New Branch
@@ -122,4 +122,4 @@ Once you submit the PR, a project maintainer will review your code. We may sugge
   - Please follow the **PEP 8** style guide for Python code.
   - We recommend using a code formatter like `black` to automatically format your code.
 
-Thank you again for your interest in making LwFlow better\! ❤️
+Thank you again for your interest in making PyLabFlow better\! ❤️
