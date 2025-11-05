@@ -7,5 +7,4 @@ user guide
 
    concepts
    workflow
-   tutorial
 
