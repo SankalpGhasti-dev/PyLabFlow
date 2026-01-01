@@ -393,14 +393,15 @@ def _import_on_remote(zip_path, meta, mode="copy"):
 def _loc_hash(code: str) -> str:
     return hashlib.sha1(code.encode()).hexdigest()[:8]
 
+# ---------------------------
+# Helper: write single .py file for locs (fixed)
+# ---------------------------
 def _write_loc_payload(zf, lab_base: Path, locs: set, transfer_id: str):
     """
     Collect all component classes defined in locs and their imports,
     write them into a single <transfer_id>.py file inside the zip,
     and return mapping of full loc -> transfer_id.classhash
     """
-    from importlib.util import spec_from_file_location, module_from_spec
-    import sys
     import ast
 
     loc_map = {}
@@ -412,27 +413,34 @@ def _write_loc_payload(zf, lab_base: Path, locs: set, transfer_id: str):
         module_name, class_name = loc.rsplit('.', 1)
         module_path = lab_base / "components" / f"{module_name}.py"
         if not module_path.exists():
+            print(f"Warning: component file not found: {module_path}")
             continue
 
         code_text = module_path.read_text(encoding='utf-8')
 
-        # Extract only the class definition of class_name
+        # Parse AST
         tree = ast.parse(code_text)
-        class_code = []
+
+        # --- Collect imports ---
+        imports = []
+        classes = []
         for node in tree.body:
-            if isinstance(node, ast.ClassDef) and node.name == class_name:
-                class_code.append(ast.get_source_segment(code_text, node))
-        if not class_code:
+            if isinstance(node, (ast.Import, ast.ImportFrom)):
+                imports.append(ast.get_source_segment(code_text, node))
+            elif isinstance(node, ast.ClassDef) and node.name == class_name:
+                classes.append(ast.get_source_segment(code_text, node))
+
+        if not classes:
             continue
 
-        class_code_str = '\n\n'.join(class_code)
-        class_hash = _loc_hash(class_code_str)
+        # Join imports + class definition
+        final_code = '\n'.join(imports + [''] + classes)
+        class_hash = hashlib.sha1(final_code.encode()).hexdigest()[:8]
+
         loc_map[loc] = f"{transfer_id}.{class_hash}"
+        code_chunks.append(f"# --- {loc} ---\n{final_code}\n")
 
-        # Add code to single file
-        code_chunks.append(f"# --- {loc} ---\n{class_code_str}\n")
-
-    # Write all to single file
+    # Write all to single file inside zip
     py_name = f"{transfer_id}.py"
     zf.writestr(py_name, '\n\n'.join(code_chunks))
 
