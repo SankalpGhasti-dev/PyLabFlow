@@ -317,4 +317,4 @@ def init_clone(
     set_shared_data(settings)
     register_libs_path(component_dir)
 
-    return settings
+    return settings_path
