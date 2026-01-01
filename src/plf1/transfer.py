@@ -8,6 +8,7 @@ import hashlib
 import shutil
 from copy import deepcopy
 
+from .utils import Db
 from .context import get_shared_data, set_shared_data
 from ._pipeline import PipeLine
 
@@ -123,6 +124,58 @@ def import_transfer(zip_path: Path):
 
     raise RuntimeError("Unknown transfer direction")
 
+
+def collect_transfer_meta(ppls):
+    all_paths = set()
+    all_locs = set()
+
+    for pplid in ppls:
+        P = PipeLine(pplid)
+        P.load(pplid)
+
+        cfg_path = Path(P.get_path(of="config"))
+        config = json.loads(cfg_path.read_text())
+
+        paths, locs = extract_paths_and_locs(config)
+        all_paths.update(paths)
+        all_locs.update(locs)
+
+    return {
+        "srcs": sorted(all_paths),
+        "locs": sorted(all_locs),
+    }
+
+
+def _payload_name(src: str) -> str:
+    h = hashlib.sha1(src.encode()).hexdigest()[:8]
+    return f"p_{h}"
+
+
+def _write_payload(zf, lab_base: Path, paths: set):
+    path_map = {}
+
+    for src in sorted(paths):
+        src_path = Path(src).resolve()
+        payload_name = _payload_name(src)
+        zip_root = Path("payload") / payload_name
+
+        path_map[src] = zip_root.as_posix()
+
+        if not src_path.exists():
+            continue
+
+        if src_path.is_dir():
+            for f in src_path.rglob("*"):
+                if f.is_file():
+                    zf.write(
+                        f,
+                        zip_root / f.relative_to(src_path)
+                    )
+        else:
+            zf.write(src_path, zip_root / src_path.name)
+
+    return path_map
+
 # ---------------------------
 # Internal: BASE -> REMOTE
 # ---------------------------
@@ -138,18 +191,27 @@ def _export_base_to_remote(ppls, clone_id, transfer_type, mode="copy"):
     transfer_id = f"t_{datetime.utcnow().strftime('%Y%m%d_%H%M%S')}_{uuid4().hex[:6]}"
     zip_path = clone_dir / "transfers" / f"{transfer_id}.zip"
     zip_path.parent.mkdir(parents=True, exist_ok=True)
-
-    transfer_meta = {
-        "transfer_id": transfer_id,
-        "origin_lab_id": settings.get("lab_id"),
-        "target_lab_id": clone_id,
-        "direction": "base_to_remote",
-        "transfer_type": transfer_type,
-        "created_at": datetime.utcnow().isoformat(),
-        "ppls": ppls,
-    }
+    paths, locs = collect_transfer_meta(ppls)
+    
 
     with zipfile.ZipFile(zip_path, "w", zipfile.ZIP_DEFLATED) as zf:
+        path_map = _write_payload(zf, lab_base, paths)
+        # ---- LOCS: single .py file ----
+        loc_map = _write_loc_payload(zf, lab_base, locs, transfer_id)
+
+        transfer_meta = {
+            "transfer_id": transfer_id,
+            "origin_lab_id": settings.get("lab_id"),
+            "target_lab_id": clone_id,
+            "direction": "base_to_remote",
+            "transfer_type": transfer_type,
+            "created_at": datetime.utcnow().isoformat(),
+            "ppls": _collect_ppls_meta(ppls),
+            "transfer_meta": {
+                "path_map": path_map,
+                "loc_map": loc_map,
+            }
+        }
         for pplid in ppls:
             P = PipeLine()
             if not P.verify(pplid=pplid):
@@ -304,23 +366,78 @@ def _import_on_remote(zip_path, meta, mode="copy"):
         else:
             shutil.copy2(item, target)
 
-            
+
     # ---- Register pipelines ----
     _register_ppls_in_db(meta.get("ppls", {}))
 
     # ---- Attach transfer context (provenance only) ----
+    tm = meta.get("transfer_meta", {})
+
     ctx = TransferContext(
-        path_map=meta.get("path_map", {}),
-        component_map=meta.get("component_map", {}),
+        path_map={
+            src: str(lab_base / dst)
+            for src, dst in tm.get("path_map", {}).items()
+        },
+        component_map={},   # future
         transfer_id=meta["transfer_id"],
-        # origin_lab_id=meta.get("origin_lab_id"),
     )
+
 
     settings["transfer_context"] = ctx
     set_shared_data(settings)
 
     return True
-  
+# ---------------------------
+# Helper: write single .py file for locs
+# ---------------------------
+def _loc_hash(code: str) -> str:
+    return hashlib.sha1(code.encode()).hexdigest()[:8]
+
+def _write_loc_payload(zf, lab_base: Path, locs: set, transfer_id: str):
+    """
+    Collect all component classes defined in locs and their imports,
+    write them into a single <transfer_id>.py file inside the zip,
+    and return mapping of full loc -> transfer_id.classhash
+    """
+    from importlib.util import spec_from_file_location, module_from_spec
+    import sys
+    import ast
+
+    loc_map = {}
+    code_chunks = []
+
+    for loc in sorted(locs):
+        if '.' not in loc:
+            continue
+        module_name, class_name = loc.rsplit('.', 1)
+        module_path = lab_base / "components" / f"{module_name}.py"
+        if not module_path.exists():
+            continue
+
+        code_text = module_path.read_text(encoding='utf-8')
+
+        # Extract only the class definition of class_name
+        tree = ast.parse(code_text)
+        class_code = []
+        for node in tree.body:
+            if isinstance(node, ast.ClassDef) and node.name == class_name:
+                class_code.append(ast.get_source_segment(code_text, node))
+        if not class_code:
+            continue
+
+        class_code_str = '\n\n'.join(class_code)
+        class_hash = _loc_hash(class_code_str)
+        loc_map[loc] = f"{transfer_id}.{class_hash}"
+
+        # Add code to single file
+        code_chunks.append(f"# --- {loc} ---\n{class_code_str}\n")
+
+    # Write all to single file
+    py_name = f"{transfer_id}.py"
+    zf.writestr(py_name, '\n\n'.join(code_chunks))
+
+    return loc_map
+
 # ---------------------------
 # Internal: import on base
 # ---------------------------
@@ -332,32 +449,56 @@ def _import_on_base(zip_path, meta):
 
 def _register_ppls_in_db(ppls_meta: dict):
     settings = get_shared_data()
-    db_path = Path(settings["data_path"]) / "ppls.db"
-
-    db = Db(db_path=str(db_path))
+    db = Db(db_path=str(Path(settings["data_path"]) / "ppls.db"))
 
     existing = {
-        row[0]
-        for row in db.query("SELECT pplid FROM ppls").fetchall()
+        row[0] for row in db.query("SELECT pplid FROM ppls")
     }
 
-    for pplid, info in ppls_meta.items():
+    for pplid, meta in ppls_meta.items():
         if pplid in existing:
-            continue  # idempotent import
+            continue
 
         db.execute(
             """
-            INSERT INTO ppls (pplid, args_hash, status)
-            VALUES (?, ?, ?)
+            INSERT INTO ppls (pplid, args_hash, status, created_time)
+            VALUES (?, ?, ?, ?)
             """,
             (
-                pplid,
-                info.get("config_hash", ""),
-                "init",
-            ),
+                meta["pplid"],
+                meta.get("args_hash"),
+                meta.get("status", "init"),
+                meta.get("created_time"),
+            )
         )
 
     db.close()
+
+def _collect_ppls_meta(ppls):
+    settings = get_shared_data()
+    db = Db(db_path=str(Path(settings["data_path"]) / "ppls.db"))
+
+    rows = db.query(
+        """
+        SELECT pplid, args_hash, status, created_time
+        FROM ppls
+        WHERE pplid IN ({})
+        """.format(",".join("?" * len(ppls))),
+        tuple(ppls)
+    )
+
+    db.close()
+
+    meta = {}
+    for pplid, args_hash, status, created_time in rows:
+        meta[pplid] = {
+            "pplid": pplid,
+            "args_hash": args_hash,
+            "status": status,
+            "created_time": created_time
+        }
+
+    return meta
 
 
 import json
