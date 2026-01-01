@@ -1,5 +1,5 @@
 """
-dummy
+Pipeline class  holder
 """
 
 from typing import TypedDict, Optional, Dict, Union, Any

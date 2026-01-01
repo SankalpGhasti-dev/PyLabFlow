@@ -52,6 +52,13 @@ def create_project(settings: dict) -> str:
         if os.path.exists(db_path):
             os.remove(db_path)
 
+
+
+    base_dir = Path(data_path)
+
+    if base_dir.exists() and base_dir.is_dir():
+        new_folder = base_dir / "Clones"
+        new_folder.mkdir(exist_ok=True)
     # Setup DBs and shared data
     setup_databases(settings)
     set_shared_data(settings)
@@ -177,3 +184,23 @@ def get_logs():
     db.close()
     df = pd.DataFrame(rows, columns=col_names)
     return df
+
+
+def create_clone(clone_id, name, desc="", clone_type="remote"):
+    settings = get_shared_data()
+    clones_dir = Path(settings["data_path"]) / "Clones" / clone_id
+    clones_dir.mkdir(parents=True, exist_ok=False)
+
+    clone_cfg = {
+        "clone_id": clone_id,
+        "clone_type": clone_type,
+        "name": name,
+        "desc": desc,
+        "created_at": datetime.utcnow().isoformat(),
+        "transfers": []
+    }
+
+    with open(clones_dir / "clone.json", "w", encoding="utf-8") as f:
+        json.dump(clone_cfg, f, indent=4)
+
+    return clone_cfg
