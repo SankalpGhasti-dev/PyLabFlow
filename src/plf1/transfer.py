@@ -30,15 +30,7 @@ def _save_transfer_config(transfers_dir: Path, cfg: dict):
     cfg_path.write_text(json.dumps(cfg, indent=4), encoding="utf-8")
 
 
-def _load_transfer_config(transfers_dir: Path):
-    cfg_path = transfers_dir / "transfer_config.json"
-    if not cfg_path.exists():
-        return {
-            "active_transfer_id": None,
-            "history": [],
-            "ppl_to_transfer": {} #sqlit3
-        }
-    return json.loads(cfg_path.read_text(encoding="utf-8"))
+
 #---------------------
 # Safe ZIP extraction
 # ---------------------------
@@ -93,7 +85,7 @@ def export_transfer(ppls, clone_id=None, transfer_type="run", prev_transfer_id=N
     if role == "base":
         if not clone_id:
             raise ValueError("clone_id required for base export")
-        return _export_base_to_remote(ppls, clone_id, transfer_type, mode)
+        return _export_base_to_remote(ppls, clone_id, transfer_type)
 
     if role == "remote":
         if transfer_type != "results":
@@ -105,7 +97,7 @@ def export_transfer(ppls, clone_id=None, transfer_type="run", prev_transfer_id=N
 # ---------------------------
 # Import Transfer
 # ---------------------------
-def import_transfer(zip_path: Path):
+def import_transfer(zip_path: Path, **kwargs):
     """Import a transfer ZIP into current lab"""
     settings = get_shared_data()
 
@@ -116,7 +108,7 @@ def import_transfer(zip_path: Path):
 
     if direction == "base_to_remote":
         _ensure_remote(settings)
-        return _import_on_remote(zip_path, meta)
+        return _import_on_remote(zip_path, meta, **kwargs)
 
     if direction == "remote_to_base":
         _ensure_base(settings)
@@ -147,7 +139,7 @@ def _payload_name(src: str) -> str:
     return f"p_{h}"   ##  extention cdonsistency
 
 
-def _write_payload(zf, lab_base: Path, paths: set):
+def _write_src_payload(zf, lab_base: Path, paths: set):
     path_map = {}
 
     for src in sorted(paths):
@@ -283,7 +275,7 @@ def _export_base_to_remote(ppls, clone_id, transfer_type):
 
 
     with zipfile.ZipFile(zip_path, "w", zipfile.ZIP_DEFLATED) as zf:
-        path_map = _write_payload(zf, lab_base, paths)
+        path_map = _write_src_payload(zf, lab_base, paths)
         # ---- LOCS: single .py file ----
         loc_map = _write_loc_payload(zf, locs, transfer_id)
 
@@ -296,7 +288,7 @@ def _export_base_to_remote(ppls, clone_id, transfer_type):
             "created_at": datetime.utcnow().isoformat(),
             "ppls": _collect_ppls_meta(ppls),
             "transfer_meta": {
-                "path_map": path_map,
+                "src_map": path_map,
                 "loc_map": loc_map,
             }
         }
@@ -465,7 +457,7 @@ def _import_on_remote(zip_path: Path, meta: dict, mode="copy", allow_overwrite=F
     # Load / init transfer_config.json
     # --------------------------------------------------
     def _load_cfg():
-        cfg_path = transfers_dir / "transfer_config.json"
+        cfg_path = lab_base / "Transfers" / "transfer_config.json"
         if not cfg_path.exists():
             return {
                 "active_transfer_id": None,
@@ -474,11 +466,7 @@ def _import_on_remote(zip_path: Path, meta: dict, mode="copy", allow_overwrite=F
             }
         return json.loads(cfg_path.read_text(encoding="utf-8"))
 
-    def _save_cfg(cfg):
-        cfg_path = transfers_dir / "transfer_config.json"
-        cfg_path.write_text(json.dumps(cfg, indent=4), encoding="utf-8")
-
-    cfg = _load_transfer_config(transfers_dir)
+    cfg = _load_cfg()
 
     ppl_to_transfer = cfg.setdefault("ppl_to_transfer", {})
 
@@ -531,6 +519,13 @@ def _import_on_remote(zip_path: Path, meta: dict, mode="copy", allow_overwrite=F
     # --------------------------------------------------
     _register_ppls_in_db(ppls_meta)
 
+    for pplid in incoming_ppls:
+        dst = lab_base 
+        src = transfer_dir / dst.relative_to(lab_base)
+        shutil.move(src, dst)
+
+
+
     # --------------------------------------------------
     # Persist per-transfer metadata
     # --------------------------------------------------
@@ -560,15 +555,16 @@ def _import_on_remote(zip_path: Path, meta: dict, mode="copy", allow_overwrite=F
     cfg["active_transfer_id"] = transfer_id
 
     _save_transfer_config(transfers_dir, cfg)
-
+    for pplid in incoming_ppls:
+        P = PipeLine(pplid=pplid)
+        for p in P.paths:
+            if p=='config':
+                continue
+            dst = Path(P.get_path(p))
+            src = transfer_dir / dst.relative_to(lab_base)
+            shutil.move(src, dst)
 
     return True
-
-# ---------------------------
-# Helper: write single .py file for locs
-# ---------------------------
-def _loc_hash(code: str) -> str:
-    return hashlib.sha1(code.encode()).hexdigest()[:8]
 
 
 # ---------------------------
@@ -719,3 +715,18 @@ def get_clones():
     return df
 
 
+def get_transfers():
+
+    settings = get_shared_data()
+    if settings.get("lab_role") == "base":
+        print('for base lab  call  `get_clones')
+        return 
+
+    lab_base = Path(settings["data_path"]).resolve()
+
+    transfers_dir = lab_base / "Transfers"
+    transfers_dir.mkdir(exist_ok=True)
+
+    cfg_path = transfers_dir / "transfer_config.json"
+    transfers = json.loads(cfg_path.read_text(encoding="utf-8"))
+    return transfers["ppl_to_transfer"]

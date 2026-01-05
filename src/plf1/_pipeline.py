@@ -44,8 +44,6 @@ class PipeLine:
         self._paths = ['config']
         self.settings = get_shared_data()
 
-        self__lab_type = self.settings.get("lab_role")
-
         self.pplid = None
         self.workflow = None
         
@@ -151,44 +149,14 @@ class PipeLine:
         with open(cfg_path, encoding="utf-8") as f:
             self.cnfg = json.load(f)
         self.pplid = pplid
-
-        # ----------------------------
-        # Automatic remote adjustment
-        # ----------------------------
-        if self.settings.get("lab_role") == "remote":
-            print(33333)
-            ctx: "TransferContext" = self.settings.get("transfer_context")
-            if ctx:
-                print(999999)
-                self._apply_remote_paths(ctx)
+    
 
         if prepare:
             self.prepare()
 
-    def _apply_remote_paths(self, ctx: "TransferContext"):
-        """
-        Adjust all locs and paths using TransferContext for remote lab.
-        Only modifies self.cnfg in memory; never writes to disk.
-        """
-        def remap(d):
-            if isinstance(d, dict):
-                for k, v in d.items():
-                    if k == "loc" and isinstance(v, str):
-                        # Map LOC via transfer context
-                        d[k] = ctx.map_component(v, pplid=self.pplid)
-                    elif k in ("src", "path", "data_path") and isinstance(v, str):
-                        # Map file paths via transfer context
-                        d[k] = ctx.map_path(v)
-                    else:
-                        remap(v)
-            elif isinstance(d, list):
-                for item in d:
-                    remap(item)
 
-        remap(self.cnfg)
 
-        # Force re-prepare
-        self._prepared = False
+
 
 
     def reset(self):
@@ -204,6 +172,11 @@ class PipeLine:
         self.__db = Db(db_path=f"{self.settings['data_path']}/ppls.db")
 
     def load_component(self,loc: str, args: Optional[Dict[str, Any]] = None, setup: bool = True):
+        if self.settings.get("lab_role") != "base":
+            Tsx = TransferContext()
+
+            loc = Tsx.map_loc(loc, pplid=self.pplid)
+
         comp =  load_component(loc=loc, args=args, setup=setup)
         comp.P = self
         return comp
@@ -354,18 +327,12 @@ class PipeLine:
         """
         try:
 
-
             if self.settings.get("lab_role") != "base":
+                Tsx = TransferContext()
+
+                self.cnfg = Tsx.map_cnfg(self.cnfg)
 
 
-
-
-
-
-
-
-
-                pass
             self.workflow = self.load_component(**self.cnfg['workflow'])
             self._prepared = self.workflow.prepare()
 
